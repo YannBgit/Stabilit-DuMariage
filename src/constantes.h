@@ -1,0 +1,6 @@
+// LIBRAIRIES
+
+// CONSTANTES
+#define NBR_HOMMES 4
+#define NBR_FEMMES 4
+#define COUPLE 2
