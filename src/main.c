@@ -1,8 +1,33 @@
 // LIBRAIRIES
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
 #include "constantes.h"
 
 // FONCTIONS
-void attribuerPreferences(int **prefH, int **prefF)
+uint8_t **allouerMemoire(uint8_t n, uint8_t m)
+{
+	uint8_t **matrice = malloc(n * sizeof(uint8_t *));
+
+	for(uint8_t i = 0; i < n; i++)
+	{
+		matrice[i] = malloc(m * sizeof(uint8_t));
+	}
+
+	return matrice;
+}
+
+void libererMemoire(uint8_t **matrice, uint8_t n, uint8_t m)
+{
+	for(uint8_t i = 0; i < m; i ++)
+	{
+		free(matrice[i]);
+	}
+
+	free(matrice);
+}
+
+void attribuerPreferences(uint8_t **prefH, uint8_t **prefF)
 {
 	// Préférences Hommes
 	prefH[0][0] = 1;
@@ -47,7 +72,7 @@ void attribuerPreferences(int **prefH, int **prefF)
 	prefF[3][3] = 1;
 }
 
-int min(int a, int b)
+uint8_t min(uint8_t a, uint8_t b)
 {
 	if(a < b)
 	{
@@ -60,14 +85,46 @@ int min(int a, int b)
 	}
 }
 
-void attribuerMariages(int **prefH, int **prefF, int **nbrMariages)
+void initSelection(uint8_t **selection)
 {
-	
+	for(uint8_t i = 0; i < NBR_FEMMES; i++)
+	{
+		for(uint8_t j = 0; j < NBR_HOMMES; j++)
+		{
+			selection[i][j] = NBR_HOMMES;
+		}
+	}
 }
 
-void afficherMariages(int **mariages, int n)
+void attribuerMariages(uint8_t **prefH, uint8_t **prefF, uint8_t nbrMariages, uint8_t **mariages)
 {
-	for(int i = 0; i < n; i++)
+	uint8_t **selection = allouerMemoire(NBR_FEMMES, NBR_HOMMES);
+	initSelection(selection);
+
+	for(uint8_t i = 0; i < NBR_FEMMES; i++)
+	{
+		for(uint8_t j = 0; j < NBR_HOMMES; j++)
+		{
+			// Les hommes se proposent à leur femme préférée et celle-ci ne retient que celui qu'elle préfère
+			if(prefH[j][i] < selection[i][j])
+			{
+				selection[prefH[j][i]][i] = j;
+			}
+		}
+	}
+
+	for(uint8_t i = 0; i < nbrMariages; i++)
+	{
+		mariages[i][0] = selection[i][0];
+		mariages[i][1] = selection[i][0];
+	}
+
+	libererMemoire(selection, NBR_FEMMES, NBR_HOMMES);
+}
+
+void afficherMariages(uint8_t **mariages, uint8_t nbrMariages)
+{
+	for(uint8_t i = 0; i < nbrMariages; i++)
 	{
 		printf("Mariage n°%d : H%d + F%d\n", i, mariages[i][0], mariages[i][1]);
 	}
@@ -77,18 +134,24 @@ void afficherMariages(int **mariages, int n)
 int main()
 {
 	// Initialisation des variables
-	int prefH[NBR_HOMMES][NBR_FEMMES];
-	int prefF[NBR_FEMMES][NBR_HOMMES];
-	int nbrMariages = min(NBR_HOMMES, NBR_FEMMES);
-	int mariages[nbrMariages][COUPLE];
-
+	uint8_t **prefH = allouerMemoire(NBR_HOMMES, NBR_FEMMES);
+	uint8_t **prefF = allouerMemoire(NBR_FEMMES, NBR_HOMMES);
 	attribuerPreferences(prefH, prefF);
 
+	uint8_t nbrMariages = min(NBR_HOMMES, NBR_FEMMES);
+
+	uint8_t **mariages = allouerMemoire(nbrMariages, COUPLE);
+
 	// Attribution des mariages
-	attribuerMariages(prefH, prefF, nbrMariages);
+	attribuerMariages(prefH, prefF, nbrMariages, mariages);
 
 	// Affichage
 	afficherMariages(mariages, nbrMariages);
+
+	// Libération de la mémoire
+	libererMemoire(mariages, nbrMariages, COUPLE);
+	libererMemoire(prefF, NBR_FEMMES, NBR_HOMMES);
+	libererMemoire(prefH, NBR_HOMMES, NBR_FEMMES);
 
 	// Fin
 	exit(0);

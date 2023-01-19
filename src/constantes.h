@@ -1,6 +1,6 @@
 // LIBRAIRIES
 
 // CONSTANTES
-#define NBR_HOMMES 4
-#define NBR_FEMMES 4
-#define COUPLE 2
+int NBR_HOMMES = 4;
+int NBR_FEMMES = 4;
+int COUPLE = 2;
