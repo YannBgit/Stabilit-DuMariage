@@ -2,36 +2,36 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "constantes.h"
+#include <stdbool.h>
 
 // FONCTIONS
-uint8_t *allouerMemoire1D(uint8_t n)
+int8_t *allouerMemoire1D(int8_t n)
 {
-	uint8_t *matrice = malloc(n * sizeof(uint8_t));
+	int8_t *matrice = malloc(n * sizeof(int8_t));
 
 	return matrice;
 }
 
-uint8_t **allouerMemoire2D(uint8_t n, uint8_t m)
+int8_t **allouerMemoire2D(int8_t n, int8_t m)
 {
-	uint8_t **matrice = malloc(n * sizeof(uint8_t *));
+	int8_t **matrice = malloc(n * sizeof(int8_t *));
 
-	for(uint8_t i = 0; i < n; i++)
+	for(int8_t i = 0; i < n; i++)
 	{
-		matrice[i] = malloc(m * sizeof(uint8_t));
+		matrice[i] = malloc(m * sizeof(int8_t));
 	}
 
 	return matrice;
 }
 
-void libererMemoire1D(uint8_t *matrice, uint8_t n)
+void libererMemoire1D(int8_t *matrice, int8_t n)
 {
 	free(matrice);
 }
 
-void libererMemoire2D(uint8_t **matrice, uint8_t n, uint8_t m)
+void libererMemoire2D(int8_t **matrice, int8_t n, int8_t m)
 {
-	for(uint8_t i = 0; i < m; i ++)
+	for(int8_t i = 0; i < m; i ++)
 	{
 		free(matrice[i]);
 	}
@@ -39,94 +39,129 @@ void libererMemoire2D(uint8_t **matrice, uint8_t n, uint8_t m)
 	free(matrice);
 }
 
-int min(int a, int b)
-{
-	if(a < b)
-	{
-		return a;
-	}
-
-	return b;
-}
-
-int max(int a, int b)
-{
-	if(a > b)
-	{
-		return a;
-	}
-
-	return b;
-}
-
-void initPreferences(uint8_t **prefH, uint8_t **prefF)
+void initPreferences(int8_t **prefH, int8_t **prefF)
 {
 	// Préférences Hommes
-	prefH[0][0] = 1;
-	prefH[0][1] = 2;
-	prefH[0][2] = 3;
-	prefH[0][3] = 4;
+	prefH[0][0] = 0;
+	prefH[0][1] = 1;
+	prefH[0][2] = 2;
+	prefH[0][3] = 3;
 
-	prefH[1][0] = 1;
-	prefH[1][1] = 2;
-	prefH[1][2] = 3;
-	prefH[1][3] = 4;
+	prefH[1][0] = 0;
+	prefH[1][1] = 1;
+	prefH[1][2] = 2;
+	prefH[1][3] = 3;
 
-	prefH[2][0] = 3;
-	prefH[2][1] = 1;
-	prefH[2][2] = 2;
-	prefH[2][3] = 4;
+	prefH[2][0] = 2;
+	prefH[2][1] = 0;
+	prefH[2][2] = 1;
+	prefH[2][3] = 3;
 
-	prefH[3][0] = 2;
-	prefH[3][1] = 3;
-	prefH[3][2] = 1;
-	prefH[3][3] = 4;
+	prefH[3][0] = 1;
+	prefH[3][1] = 2;
+	prefH[3][2] = 0;
+	prefH[3][3] = 3;
 
 	// Préférences Femmes
-	prefF[0][0] = 3;
-	prefF[0][1] = 4;
-	prefF[0][2] = 1;
-	prefF[0][3] = 2;
+	prefF[0][0] = 2;
+	prefF[0][1] = 3;
+	prefF[0][2] = 0;
+	prefF[0][3] = 1;
 
-	prefF[1][0] = 2;
-	prefF[1][1] = 3;
-	prefF[1][2] = 4;
-	prefF[1][3] = 1;
+	prefF[1][0] = 1;
+	prefF[1][1] = 2;
+	prefF[1][2] = 3;
+	prefF[1][3] = 0;
 
-	prefF[2][0] = 1;
-	prefF[2][1] = 2;
-	prefF[2][2] = 3;
-	prefF[2][3] = 4;
+	prefF[2][0] = 0;
+	prefF[2][1] = 1;
+	prefF[2][2] = 2;
+	prefF[2][3] = 3;
 
-	prefF[3][0] = 3;
-	prefF[3][1] = 4;
-	prefF[3][2] = 2;
-	prefF[3][3] = 1;
+	prefF[3][0] = 2;
+	prefF[3][1] = 3;
+	prefF[3][2] = 1;
+	prefF[3][3] = 0;
 }
 
-void initMariages(uint8_t *mariages, int nbrMariages)
+void initMariages(int8_t *mariages, int8_t nbrHommes, int8_t nbrFemmes)
 {
-	for(uint8_t i = 0; i < nbrMariages; i++)
+	for(int8_t i = 0; i < nbrFemmes; i++)
 	{
-		mariages[i] = max(NBR_HOMMES, NBR_FEMMES);
+		mariages[i] = nbrHommes;
 	}
 }
 
-void attribuerMariages(uint8_t **prefH, uint8_t **prefF, uint8_t *mariages, int nbrMariages)
+int8_t hommePrefere(int8_t hommeActuel, int8_t hommeConcurrent, int8_t nbrHommes, int8_t indiceFemme, int8_t **prefF)
 {
-	// Les hommes se proposent aux femmes qui ne retiennt que celui qu'elles préfèrent
-
-	while(1 != 1) // Tant que tous les individus du groupe de taille minimum n'ont pas trouvé de partenaire
+	for(int8_t i = 0; i < nbrHommes; i++)
 	{
-		// Les hommes rejetés se proposent à leur choix suivant qui les retient ou non. Si retenu, l'homme dont on a pris la place devra se proposer à son tour.
+		if((prefF[indiceFemme][i] == hommeActuel) || (prefF[indiceFemme][i] == hommeConcurrent))
+		{
+			return prefF[indiceFemme][i];
+		}
+	}
+
+	return nbrHommes;
+}
+
+bool ontTousPartenaire(int8_t *mariages, int8_t nbrHommes, int8_t nbrFemmes)
+{
+	for(int8_t i = 0; i < nbrFemmes; i++)
+	{
+		if(mariages[i] == nbrHommes)
+		{
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+bool hommeSeul(int8_t *mariages, int8_t homme, int8_t nbrFemmes)
+{
+	for(int8_t i = 0; i < nbrFemmes; i++)
+	{
+		if(mariages[i] == homme)
+		{
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+void attribuerMariages(int8_t **prefH, int8_t **prefF, int8_t *mariages, int8_t nbrHommes, int8_t nbrFemmes)
+{
+	// Les hommes se proposent à leur femme préférée qui ne retient que celui qu'elle préfère
+	for(int8_t i = 0; i < nbrHommes; i++)
+	{
+		mariages[prefH[i][0]] = hommePrefere(mariages[prefH[i][0]], i, nbrHommes, prefH[i][0], prefF);
+	}
+
+	// Tant que tous les individus du groupe de taille minimum n'ont pas trouvé de partenaire
+	while(!ontTousPartenaire(mariages, nbrHommes, nbrFemmes))
+	{
+		// Les hommes seuls se proposent à leur choix suivant qui les retient ou non
+		// Si retenu, l'homme dont on a pris la place doit se proposer à son tour
+		for(int8_t i = 0; i < nbrHommes; i++)
+		{
+			if(hommeSeul(mariages, i, nbrFemmes))
+			{
+				for(int8_t j = 0; j < nbrFemmes; j++)
+				{
+					mariages[prefH[i][j]] = hommePrefere(mariages[prefH[i][j]], i, nbrHommes, prefH[i][j], prefF);
+				}
+			}
+		}
 	}
 }
 
-void afficherMariages(uint8_t *mariages, int nbrMariages)
+void afficherMariages(int8_t *mariages, int8_t nbrFemmes)
 {
-	for(uint8_t i = 0; i < nbrMariages; i++)
+	for(int8_t i = 0; i < nbrFemmes; i++)
 	{
-		printf("Mariage n°%d : H%d + F%d\n", i, mariages[i], i);
+		printf("Mariage n°%d : Femme%d + Homme%d\n", i + 1, i + 1, mariages[i] + 1);
 	}
 }
 
@@ -134,25 +169,26 @@ void afficherMariages(uint8_t *mariages, int nbrMariages)
 int main()
 {
 	// Initialisation des variables
-	int nbrMariages = min(NBR_HOMMES, NBR_FEMMES);
+	int8_t nbrHommes = 4; // Groupe de taille maximum
+	int8_t nbrFemmes = 4; // Groupe de taille minimum (correspond au nombre de mariages)
 
-	uint8_t **prefH = allouerMemoire2D(NBR_HOMMES, NBR_FEMMES);
-	uint8_t **prefF = allouerMemoire2D(NBR_FEMMES, NBR_HOMMES);
+	int8_t **prefH = allouerMemoire2D(nbrHommes, nbrFemmes);
+	int8_t **prefF = allouerMemoire2D(nbrFemmes, nbrHommes);
 	initPreferences(prefH, prefF);
 
-	uint8_t *mariages = allouerMemoire1D(nbrMariages);
-	initMariages(mariages, nbrMariages);
+	int8_t *mariages = allouerMemoire1D(nbrFemmes);
+	initMariages(mariages, nbrHommes, nbrFemmes);
 
 	// Attribution des mariages
-	attribuerMariages(prefH, prefF, mariages, nbrMariages);
+	attribuerMariages(prefH, prefF, mariages, nbrHommes, nbrFemmes);
 
 	// Affichage
-	afficherMariages(mariages, nbrMariages);
+	afficherMariages(mariages, nbrFemmes);
 
 	// Libération de la mémoire
-	libererMemoire1D(mariages, nbrMariages);
-	libererMemoire2D(prefF, NBR_FEMMES, NBR_HOMMES);
-	libererMemoire2D(prefH, NBR_HOMMES, NBR_FEMMES);
+	libererMemoire1D(mariages, nbrFemmes);
+	libererMemoire2D(prefF, nbrFemmes, nbrHommes);
+	libererMemoire2D(prefH, nbrHommes, nbrFemmes);
 
 	// Fin
 	exit(0);

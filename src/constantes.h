@@ -1,6 +1,0 @@
-// LIBRAIRIES
-
-// CONSTANTES
-int NBR_HOMMES = 4;
-int NBR_FEMMES = 4;
-int COUPLE = 2;
