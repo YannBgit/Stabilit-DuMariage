@@ -150,7 +150,11 @@ void attribuerMariages(int8_t **prefH, int8_t **prefF, int8_t *mariages, int8_t 
 			{
 				for(int8_t j = 0; j < nbrFemmes; j++)
 				{
-					mariages[prefH[i][j]] = hommePrefere(mariages[prefH[i][j]], i, nbrHommes, prefH[i][j], prefF);
+					if(hommePrefere(mariages[prefH[i][j]], i, nbrHommes, prefH[i][j], prefF) == i)
+					{
+						mariages[prefH[i][j]] = hommePrefere(mariages[prefH[i][j]], i, nbrHommes, prefH[i][j], prefF);
+						break;
+					}
 				}
 			}
 		}
