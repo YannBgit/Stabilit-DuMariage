@@ -52,14 +52,14 @@ void initPreferences(int8_t **prefH, int8_t **prefF)
 	prefH[1][2] = 2;
 	prefH[1][3] = 3;
 
-	prefH[2][0] = 2;
-	prefH[2][1] = 0;
-	prefH[2][2] = 1;
+	prefH[2][0] = 1;
+	prefH[2][1] = 2;
+	prefH[2][2] = 0;
 	prefH[2][3] = 3;
 
-	prefH[3][0] = 1;
-	prefH[3][1] = 2;
-	prefH[3][2] = 0;
+	prefH[3][0] = 2;
+	prefH[3][1] = 0;
+	prefH[3][2] = 1;
 	prefH[3][3] = 3;
 
 	// Préférences Femmes
@@ -68,20 +68,20 @@ void initPreferences(int8_t **prefH, int8_t **prefF)
 	prefF[0][2] = 0;
 	prefF[0][3] = 1;
 
-	prefF[1][0] = 1;
-	prefF[1][1] = 2;
-	prefF[1][2] = 3;
-	prefF[1][3] = 0;
+	prefF[1][0] = 3;
+	prefF[1][1] = 0;
+	prefF[1][2] = 1;
+	prefF[1][3] = 2;
 
 	prefF[2][0] = 0;
 	prefF[2][1] = 1;
 	prefF[2][2] = 2;
 	prefF[2][3] = 3;
 
-	prefF[3][0] = 2;
-	prefF[3][1] = 3;
-	prefF[3][2] = 1;
-	prefF[3][3] = 0;
+	prefF[3][0] = 3;
+	prefF[3][1] = 2;
+	prefF[3][2] = 0;
+	prefF[3][3] = 1;
 }
 
 void initMariages(int8_t *mariages, int8_t nbrHommes, int8_t nbrFemmes)
@@ -165,7 +165,7 @@ void afficherMariages(int8_t *mariages, int8_t nbrFemmes)
 {
 	for(int8_t i = 0; i < nbrFemmes; i++)
 	{
-		printf("Mariage n°%d : Femme%d + Homme%d\n", i + 1, i + 1, mariages[i] + 1);
+		printf("Mariage n°%d : Femme%d + Homme%d\n", i, i, mariages[i]);
 	}
 }
 
